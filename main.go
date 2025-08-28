@@ -17,15 +17,25 @@ func main() {
 
 	db := database.Connect()
 
-	// r.Get("/", routes.GetBalance(db))
-	// r.Get("/init-balance", routes.InitializeBalance(db))
-	// r.Post("/take-balance", routes.PostTakeBalance(db))
+	r.Get("/list-user", routes.GetAllUsers(db))
+
+	
+
+	r.Get("/", routes.GetBalance(db))
+	r.Get("/init-balance", routes.InitializeBalance(db))
+	r.Post("/take-balance", routes.PostTakeBalance(db))
 
 	r.Post("/login", handlers.Login(db))
 	r.Post("/register", handlers.Register(db))
 
+	
+
 	r.Group(func(r chi.Router) {
 		r.Use(middleware.AuthMiddleware)
+
+		r.Put("/add-balance", routes.AddBalance(db))
+
+		r.Delete("/delete-user/{id}", routes.DeleteUser(db))
 
 		r.Get("/secure-route", func(w http.ResponseWriter, r *http.Request) {
 			userID := middleware.GetUserID(r.Context())

@@ -25,3 +25,27 @@ func CreateUserTable() *gormigrate.Migration {
 		},
 	}
 }
+
+func AddLevelToUser() *gormigrate.Migration {
+    return &gormigrate.Migration{
+        ID: "20250827_add_level_to_user",
+        Migrate: func(tx *gorm.DB) error {
+            return tx.Exec("ALTER TABLE users ADD COLUMN level INT NOT NULL DEFAULT 1").Error
+        },
+        Rollback: func(tx *gorm.DB) error {
+            return tx.Exec("ALTER TABLE users DROP COLUMN level").Error
+        },
+    }
+}
+
+func AddBalanceToUser() *gormigrate.Migration {
+	return &gormigrate.Migration{
+		ID: "20250827_add_balance_to_user",
+		Migrate: func(tx *gorm.DB) error {
+			return tx.Exec("ALTER TABLE users ADD COLUMN balance INT NOT NULL DEFAULT 0").Error
+		},
+		Rollback: func(tx *gorm.DB) error {
+			return tx.Exec("ALTER TABLE users DROP COLUMN balance").Error
+		},
+	}
+}
